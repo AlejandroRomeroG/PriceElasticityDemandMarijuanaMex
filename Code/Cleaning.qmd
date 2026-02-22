@@ -1,0 +1,96 @@
+---
+title: "Cleaning of the Marijuana Prices Dataset"
+author: "Alejandro Romero González"
+affiliation: "Banco de México"
+date: "21/02/2026"
+---
+
+```{r}
+library(here)
+library(dplyr)
+library(janitor)
+library(stringr)
+library(lubridate)
+library(arrow)
+```
+
+First, we load the raw dataset:
+```{r}
+RawData <- read.csv(here("Data", "Marijuana_Prices_in_Mexico_raw-3_utf8_bom.csv"))
+```
+
+The dataset contains the following structure:
+```{r}
+glimpse(RawData)
+```
+
+Second, we standarize variable names, build new columns, drop unnecessary variables, and filter out invalid observations:
+```{r}
+RawData <- RawData |>
+  clean_names() |>
+  select(-response_id, -experience, -frequency, -average_amount, -relationship, 
+         -status, -start_date, -end_date) |>
+  mutate(
+    quality = str_to_lower(str_trim(quality)),
+    state = str_squish(state),
+    municipality = str_squish(municipality),
+    gender = str_squish(gender),
+    education = str_squish(education),
+    
+    # unify amount/value across good vs bad columns
+    quantity_g = coalesce(good_quantity, bad_quantity),
+    value_mxn  = coalesce(good_value,  bad_value),
+    price_mxn_g = value_mxn / quantity_g
+  ) |>
+  select(-good_quantity, -bad_quantity, -good_value, -bad_value)
+
+RawData <- RawData |>
+  filter(
+    !is.na(quality),
+    !is.na(state),
+    !is.na(quantity_g),
+    !is.na(value_mxn),
+    
+    age<99,
+    value_mxn > 0,
+    quantity_g >= 1,
+    
+    municipality!="",
+    purchase_date!="",
+    gender!="",
+    education!="",
+    state != ""
+  ) |>
+  mutate(
+    quality = factor(quality, levels = c("bad", "good")),
+    
+    # Decompose municipality into code and name
+    muni_code = as.integer(str_extract(municipality, "\\d{5}$")),
+    muni_name = str_trim(str_remove(municipality, "\\s*\\d{5}$"))
+  ) |>
+  select(-municipality)
+```
+
+Next, we have to solve an issue with the _purchase_date_ varible, which currently has two different formats:
+```{r}
+RawData <- RawData |>
+  mutate(
+    purchase_date = parse_date_time(
+      purchase_date,
+      orders = c("dby", "d-b-y", "d-b-Y")
+    ),
+    purchase_date = as.Date(purchase_date)
+  ) |>
+  filter(purchase_date >= as.Date("2019-01-01"))
+```
+
+We drop purchases dated before 2019-01-01. Although the survey ran from February to September 2019, restricting to 2019 purchases improves temporal comparability and reduces the risk that earlier transactions reflect different market conditions or reporting noise. After this restriction, the analytic sample contains 3,294 observations, which is consistent with the fact that 3,601 respondents completed the survey.
+
+Finally, we reorder the columns and save the cleaned dataset:
+```{r}
+CleanData <- RawData |>
+  select(gender, age, education, state, muni_code, muni_name, 
+         purchase_date, quantity_g, quality, value_mxn, price_mxn_g)
+
+write_parquet(CleanData, here("Data", "Marijuana_Prices_in_Mexico_clean.parquet"))
+```
