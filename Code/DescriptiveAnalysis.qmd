@@ -1,0 +1,78 @@
+---
+title: "Descriptive Analysis of the Marijuana Prices Dataset"
+author: "Alejandro Romero González"
+affiliation: "Banco de México"
+date: "21/02/2026"
+---
+
+```{r}
+library(here)
+library(arrow)
+library(dplyr)
+library(stargazer)
+```
+
+First, we load the clean dataset:
+```{r}
+CleanData <- read_parquet(here("Data", "Marijuana_Prices_in_Mexico_clean.parquet"))
+```
+
+# Tables for paper
+```{r}
+summ_vec_std <- function(x) {
+  x <- x[!is.na(x)]
+  c(
+    Mean = mean(x),
+    Median = median(x),
+    SD   = sd(x),
+    Min  = min(x),
+    Max  = max(x)
+  )
+}
+
+make_table_std <- function(df) {
+  out <- rbind(
+    "Price (MXN per gram)" = summ_vec_std(df$price_mxn_g),
+    "Quantity (grams)"    = summ_vec_std(df$quantity_g),
+    "Value (MXN)"         = summ_vec_std(df$value_mxn),
+    "Age"                 = summ_vec_std(df$age)
+  )
+  as.data.frame(out)
+}
+
+# --- Overall table
+tab_overall <- make_table_std(CleanData)
+
+stargazer(
+  tab_overall,
+  type = "latex",
+  summary = FALSE,
+  rownames = TRUE,
+  digits = 2,
+  title = "Descriptive statistics (Overall; N = 3, 293)"
+)
+
+# --- By quality
+tab_bad  <- make_table_std(filter(CleanData, quality == "bad"))
+tab_good <- make_table_std(filter(CleanData, quality == "good"))
+
+stargazer(
+  tab_bad,
+  type = "latex",
+  summary = FALSE,
+  rownames = TRUE,
+  digits = 2,
+  title = "Descriptive statistics by quality (Bad; N = 657)",
+  column.labels = c("Bad", "Good")
+)
+
+stargazer(
+  tab_good,
+  type = "latex",
+  summary = FALSE,
+  rownames = TRUE,
+  digits = 2,
+  title = "Descriptive statistics by quality (Good; N = 2, 636)",
+  column.labels = c("Bad", "Good")
+)
+```

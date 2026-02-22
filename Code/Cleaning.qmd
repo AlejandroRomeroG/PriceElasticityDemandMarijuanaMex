@@ -53,6 +53,7 @@ RawData <- RawData |>
     
     age<99,
     value_mxn > 0,
+    value_mxn < 9999999,
     quantity_g >= 1,
     
     municipality!="",
@@ -84,7 +85,7 @@ RawData <- RawData |>
   filter(purchase_date >= as.Date("2019-01-01"))
 ```
 
-We drop purchases dated before 2019-01-01. Although the survey ran from February to September 2019, restricting to 2019 purchases improves temporal comparability and reduces the risk that earlier transactions reflect different market conditions or reporting noise. After this restriction, the analytic sample contains 3,294 observations, which is consistent with the fact that 3,601 respondents completed the survey.
+We drop purchases dated before 2019-01-01. Although the survey ran from February to September 2019, restricting to 2019 purchases improves temporal comparability and reduces the risk that earlier transactions reflect different market conditions or reporting noise. After this restriction, the analytic sample contains 3,293 observations, which is consistent with the fact that 3,601 respondents completed the survey.
 
 Finally, we reorder the columns and save the cleaned dataset:
 ```{r}
