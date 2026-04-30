@@ -35,6 +35,9 @@ HANDOFF.md
 QUALITY_ELASTICITY_ANALYSIS.md
 referee_self_audit.md
 
+# Local reference PDFs
+Literature/
+
 # INEGI shapefile bundle is large. Track only the entity and municipality
 # layers needed to reproduce centroid and driving-time calculations.
 Data/Shapefiles/**
