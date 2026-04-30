@@ -9,7 +9,6 @@ date: "21/02/2026"
 library(here)
 library(arrow)
 library(dplyr)
-library(stargazer)
 ```
 
 First, we load the clean dataset:
@@ -40,39 +39,75 @@ make_table_std <- function(df) {
   as.data.frame(out)
 }
 
-# --- Overall table
 tab_overall <- make_table_std(CleanData)
-
-stargazer(
-  tab_overall,
-  type = "latex",
-  summary = FALSE,
-  rownames = TRUE,
-  digits = 2,
-  title = "Descriptive statistics (Overall; N = 3, 293)"
-)
-
-# --- By quality
 tab_bad  <- make_table_std(filter(CleanData, quality == "bad"))
 tab_good <- make_table_std(filter(CleanData, quality == "good"))
 
-stargazer(
-  tab_bad,
-  type = "latex",
-  summary = FALSE,
-  rownames = TRUE,
-  digits = 2,
-  title = "Descriptive statistics by quality (Bad; N = 657)",
-  column.labels = c("Bad", "Good")
+print(round(tab_overall, 2))
+print(round(tab_good, 2))
+print(round(tab_bad, 2))
+
+fmt_num <- function(x, digits = 2) {
+  formatC(x, format = "f", digits = digits, big.mark = ",")
+}
+
+panel_lines <- function(df, panel_label) {
+  stats <- make_table_std(df)
+  c(
+    paste0("\\multicolumn{6}{l}{\\textit{", panel_label, "}} \\\\[3pt]"),
+    paste0("Price (MXN per gram)   & ", fmt_num(stats["Price (MXN per gram)", "Mean"]),
+           " & ", fmt_num(stats["Price (MXN per gram)", "Median"]),
+           " & ", fmt_num(stats["Price (MXN per gram)", "SD"]),
+           " & ", fmt_num(stats["Price (MXN per gram)", "Min"]),
+           " & ", fmt_num(stats["Price (MXN per gram)", "Max"]), " \\\\"),
+    paste0("Quantity (grams)       & ", fmt_num(stats["Quantity (grams)", "Mean"]),
+           " & ", fmt_num(stats["Quantity (grams)", "Median"]),
+           " & ", fmt_num(stats["Quantity (grams)", "SD"]),
+           " & ", fmt_num(stats["Quantity (grams)", "Min"]),
+           " & ", fmt_num(stats["Quantity (grams)", "Max"]), " \\\\"),
+    paste0("Transaction value (MXN)& ", fmt_num(stats["Value (MXN)", "Mean"]),
+           " & ", fmt_num(stats["Value (MXN)", "Median"]),
+           " & ", fmt_num(stats["Value (MXN)", "SD"]),
+           " & ", fmt_num(stats["Value (MXN)", "Min"]),
+           " & ", fmt_num(stats["Value (MXN)", "Max"]), " \\\\"),
+    paste0("Age (years)            & ", fmt_num(stats["Age", "Mean"]),
+           " & ", fmt_num(stats["Age", "Median"]),
+           " & ", fmt_num(stats["Age", "SD"]),
+           " & ", fmt_num(stats["Age", "Min"], 0),
+           " & ", fmt_num(stats["Age", "Max"], 0), " \\\\")
+  )
+}
+
+output_dir <- here("LaTeX", "tables")
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+
+table_lines <- c(
+  "\\begin{table}[H]",
+  "\\centering",
+  "\\caption{Descriptive statistics}",
+  "\\label{tab:descriptive}",
+  "\\begin{threeparttable}",
+  "\\begin{tabular}{lrrrrr}",
+  "\\toprule",
+  " & Mean & Median & SD & Min & Max \\\\",
+  "\\midrule",
+  panel_lines(CleanData, paste0("Panel A: Full sample (N = ", format(nrow(CleanData), big.mark = ","), ")")),
+  "\\\\[6pt]",
+  panel_lines(filter(CleanData, quality == "good"),
+              paste0("Panel B: Good quality (seedless) (N = ",
+                     format(sum(CleanData$quality == "good"), big.mark = ","), ")")),
+  "\\\\[6pt]",
+  panel_lines(filter(CleanData, quality == "bad"),
+              paste0("Panel C: Bad quality (seeded) (N = ",
+                     format(sum(CleanData$quality == "bad"), big.mark = ","), ")")),
+  "\\bottomrule",
+  "\\end{tabular}",
+  "\\begin{tablenotes}[flushleft]\\small",
+  "\\item \\textit{Notes:} Price per gram is computed as transaction value divided by quantity purchased.  Quality classification is self-reported: ``good'' denotes seedless marijuana and ``bad'' denotes seeded marijuana.",
+  "\\end{tablenotes}",
+  "\\end{threeparttable}",
+  "\\end{table}"
 )
 
-stargazer(
-  tab_good,
-  type = "latex",
-  summary = FALSE,
-  rownames = TRUE,
-  digits = 2,
-  title = "Descriptive statistics by quality (Good; N = 2, 636)",
-  column.labels = c("Bad", "Good")
-)
+writeLines(table_lines, file.path(output_dir, "table_descriptive.tex"), useBytes = TRUE)
 ```

@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering
+\small
+\caption{OSM/OSRM driving-time matrix diagnostics}
+\label{tab:appendix-osm-osrm}
+\begin{threeparttable}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Matrix & Origins & Dest. & Pairs & Mean & Median & P10 & P90 & Max\\
+\midrule
+Production-hub states & 5 & 351 & 1,755 & 881.9 & 830.1 & 318.7 & 1,467.7 & 3,466.7\\
+Seizure municipalities used & 188 & 351 & 65,988 & 891.6 & 743.2 & 225.6 & 1,737.2 & 4,878.4\\
+\bottomrule
+\end{tabular}
+}
+\begin{tablenotes}[flushleft]\small
+\item \textit{Notes:} Driving times are one-way source-to-market driving times in minutes computed with the Open Source Routing Machine (OSRM) on OpenStreetMap (OSM) road data. The production-hub matrix links five constructed hub-state points, derived from INEGI state geometries, to purchase municipalities; the seizure-gravity matrix reports MUCD marijuana-seizure municipalities in the one-month lag window linked to purchase municipalities. OSRM/OSM is treated as a road-network snapshot queried and cached in April 2026, not as a time series.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

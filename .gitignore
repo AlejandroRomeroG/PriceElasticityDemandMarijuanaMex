@@ -1,0 +1,44 @@
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.Rlib/
+
+.DS_Store
+*.swp
+
+# Replication logs and rendered notebook reports
+Logs/
+Code/*.html
+Code/*_files/
+
+# LaTeX build products
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Temporary smoke-test artifacts
+LaTeX/*smoketest*
+table_label_test.*
+results_smoketest.*
+
+# Local process notes
+HANDOFF.md
+QUALITY_ELASTICITY_ANALYSIS.md
+referee_self_audit.md
+
+# INEGI shapefile bundle is large. Track only the entity and municipality
+# layers needed to reproduce centroid and driving-time calculations.
+Data/Shapefiles/**
+!Data/Shapefiles/
+!Data/Shapefiles/conjunto_de_datos/
+!Data/Shapefiles/conjunto_de_datos/00ent.*
+!Data/Shapefiles/conjunto_de_datos/00mun.*

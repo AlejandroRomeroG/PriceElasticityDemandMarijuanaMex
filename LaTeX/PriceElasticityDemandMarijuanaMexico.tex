@@ -1,0 +1,58 @@
+% !TEX TS-program = pdflatexmk
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=apa,
+  sortcites=true,
+  natbib=true,
+  maxcitenames=2,   % APA-like in-text truncation
+  maxbibnames=99
+]{biblatex}
+\DeclareLanguageMapping{english}{english-apa}
+\addbibresource{references.bib}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{dcolumn}          % decimal-aligned columns for regression tables
+\usepackage{threeparttable}   % table notes
+
+\title{The Price Elasticity of Demand for Marijuana in Mexico}
+\author{Alejandro Romero Gonz\'{a}lez}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Mexico's cannabis-policy debate requires evidence on how consumers respond to prices, yet transaction-level price and quantity data are rarely available in illicit markets.  This paper estimates the transaction-level price elasticity of marijuana demand in Mexico using an anonymous crowdsourced survey of 3{,}293 purchases recorded in 2019 across all 32 states and 351 municipalities.  In log--log specifications with product-quality controls, demographics, and state-by-month fixed effects, the benchmark elasticity is $-0.652$: a 10\% higher unit price is associated with a 6.5\% smaller purchase quantity.  Demand differs sharply by quality tier, with seeded marijuana more price responsive ($-0.891$) than seedless marijuana ($-0.613$).  The estimate remains similar under extreme-value trimming, heaping checks, municipality fixed effects, wild cluster bootstrap inference, and coefficient-stability bounds.  Instrumental-variable diagnostics reinforce the benchmark without replacing it: a Hausman-type leave-one-out price instrument has a strong first stage and yields an estimate nearly identical to OLS, while geography-based OSM driving-time and seizure-gravity instruments are too weak to serve as alternative benchmarks.  The results provide the first Mexico-specific transaction-level benchmark for cannabis tax and regulatory analysis, while emphasizing that illicit-market elasticities should not be mechanically extrapolated to participation, aggregate consumption, or a future regulated market.
+\end{abstract}
+
+%% ---- Sections ----
+\section{Introduction}\label{sec:intro}
+\input{sections/intro}
+
+\section{Literature Review}\label{sec:litreview}
+\input{sections/litreview}
+
+\section{Data, Descriptive Statistics, and Empirical Strategy}\label{sec:data}
+\input{sections/data}
+
+\section{Results}\label{sec:results}
+\input{sections/results}
+
+\section{Conclusions}\label{sec:conclusions}
+\input{sections/conclusions}
+
+\clearpage
+\appendix
+\section{External Data Descriptive Statistics}\label{app:external-data}
+\input{sections/appendix_external_data}
+
+\printbibliography
+\end{document}

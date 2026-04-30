@@ -1,0 +1,40 @@
+\begin{table}[H]
+\centering
+\caption{Quality-segmented demand estimates}
+\label{tab:quality-segmented}
+\centering
+\begin{tabular}[t]{lccc}
+\toprule
+  & (7a) Good only & (7b) Bad only & (8) Interaction\\
+\midrule
+ln(Price) & -0.613*** & -0.891*** & -0.873***\\
+ & (0.022) & (0.041) & (0.036)\\
+Good quality &  &  & -0.019\\
+ &  &  & (0.118)\\
+ln(Price) x Good &  &  & 0.259***\\
+ &  &  & (0.037)\\
+Age & 0.023*** & 0.022*** & 0.023***\\
+ & (0.005) & (0.007) & (0.005)\\
+Gender: Other & 0.174 & 0.305 & 0.161\\
+ & (0.208) & (0.184) & (0.163)\\
+Gender: Women & -0.005 & 0.171 & 0.037\\
+ & (0.059) & (0.113) & (0.059)\\
+Education: Middle school & -0.124 & 0.193 & 0.017\\
+ & (0.262) & (0.242) & (0.220)\\
+Education: High school & -0.021 & 0.234* & 0.079\\
+ & (0.270) & (0.116) & (0.196)\\
+Education: Bachelor & 0.270 & 0.496*** & 0.353*\\
+ & (0.263) & (0.057) & (0.198)\\
+Education: Graduate & 0.345 & 0.539*** & 0.418*\\
+ & (0.294) & (0.135) & (0.219)\\
+\midrule
+Num.Obs. & 2636 & 657 & 3293\\
+R2 & 0.442 & 0.644 & 0.454\\
+R2 Adj. & 0.385 & 0.514 & 0.408\\
+\bottomrule
+\multicolumn{4}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}Dependent variable: ln(quantity in grams).}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}All columns include state-by-month FE and demographics. SEs clustered at state level.}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01.}\\
+\end{tabular}
+\end{table}

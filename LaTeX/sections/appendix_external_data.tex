@@ -1,0 +1,13 @@
+% ============================================================
+%  sections/appendix_external_data.tex  –  External Data Descriptive Statistics
+% ============================================================
+
+This appendix documents the auxiliary enforcement and driving-time inputs used in the IV diagnostics.  These sources do not enter the baseline OLS specifications; they are used only in the supply-shock instruments described in Section~\ref{sec:data}.
+
+Table~\ref{tab:appendix-mucd} summarizes the MUCD marijuana-seizure observations used to construct the seizure-gravity instrument, not the full MUCD database.  MUCD assembled these data from official responses to public-information requests submitted to federal security and justice institutions, then harmonized the heterogeneous files before publishing the database \citep{mucd2019seizures}.  Because purchases in the estimation sample run from January through September~2019, the one-month-lag instrument uses MUCD seizure records from December~2018 through August~2019.  In that lag window, 479 municipality-month records enter the marijuana-seizure index, spanning 9 months, 30 states, and 188 municipalities.  The distribution is highly right-skewed: the median seizure is 11.0 kilograms, the 90th percentile is 326.2 kilograms, and the largest recorded seizure is 10{,}390.0 kilograms.  This skewness motivates using a gravity-weighted index rather than treating all seizure locations as equally informative.
+
+\input{tables/table_appendix_mucd}
+
+Table~\ref{tab:appendix-osm-osrm} reports diagnostics for the OSRM driving-time matrices built from OSM road data.  The matrices are based on a road-network snapshot queried in April~2026, not a historical reconstruction of 2019 routing conditions.  The updated production-hub matrix links five constructed hub-state points, derived from INEGI state geometries, to the 351 purchase municipalities.  The seizure-gravity matrix links the 188 MUCD marijuana-seizure municipalities used in the lag window to the same purchase municipalities.  Driving times are one-way source-to-market driving times in minutes, so the instruments use persistent road-network connectivity rather than straight-line distances.
+
+\input{tables/table_appendix_osm_osrm}

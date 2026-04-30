@@ -1,0 +1,23 @@
+\begin{table}[H]
+\centering
+\caption{Instrumental-variables estimates and diagnostics}
+\label{tab:iv-diagnostics}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tabular}[t]{lccc}
+\toprule
+Diagnostic & OSM driving-time IV & Hausman IV & Seizure-gravity IV\\
+\midrule
+First-stage F & 0.60 & 169.09 & 7.07\\
+IV estimate & 0.793 (2.647) & -0.648 (0.068) & -0.735 (0.248)\\
+Wu--Hausman p-value & 0.335 & 0.951 & 0.740\\
+Anderson--Rubin 95\% CI & [-2.50, 0.50] & [-0.79, -0.52] & [-2.50, 0.42]\\
+\bottomrule
+\multicolumn{4}{l}{\rule{0pt}{1em}All diagnostics use the state-by-month FE specifications in Table~\ref{tab:iv-combined}.}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}IV estimate entries reproduce the coefficient on ln(Price) [IV] and clustered SE from Table~\ref{tab:iv-combined}.}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}Seizure-gravity diagnostics use one-month-lagged MUCD marijuana seizures from December 2018--August 2019.}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}For weak geography-based IVs, inference should rely on Anderson-Rubin confidence sets rather than conventional significance stars.}\\
+\multicolumn{4}{l}{\rule{0pt}{1em}OSM and seizure-gravity have first-stage F-statistics below 10; Hausman has a strong first stage but relies on a leave-one-out exclusion restriction.}\\
+\end{tabular}
+}
+\end{table}

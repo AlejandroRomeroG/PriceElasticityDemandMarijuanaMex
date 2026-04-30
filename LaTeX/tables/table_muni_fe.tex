@@ -1,0 +1,42 @@
+\begin{table}[H]
+\centering
+\caption{Demand estimates with alternative fixed-effects structures}
+\label{tab:muni-fe}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tabular}[t]{lcc}
+\toprule
+  & (1) St×Mo FE & (2) St×Mo + Muni FE\\
+\midrule
+ln(Price) & -0.652*** & -0.664***\\
+ & (0.022) & (0.021)\\
+Good quality & 0.603*** & 0.571***\\
+ & (0.059) & (0.053)\\
+Age & 0.022*** & 0.022***\\
+ & (0.005) & (0.004)\\
+Gender: Other & 0.165 & 0.073\\
+ & (0.163) & (0.143)\\
+Gender: Women & 0.034 & -0.008\\
+ & (0.059) & (0.060)\\
+Education: Middle school & 0.010 & -0.215\\
+ & (0.206) & (0.199)\\
+Education: High school & 0.070 & -0.162\\
+ & (0.180) & (0.194)\\
+Education: Bachelor & 0.348* & 0.092\\
+ & (0.184) & (0.198)\\
+Education: Graduate & 0.415* & 0.175\\
+ & (0.209) & (0.231)\\
+\midrule
+Num.Obs. & 3293 & 3127\\
+R2 & 0.448 & 0.494\\
+R2 Adj. & 0.401 & 0.413\\
+\bottomrule
+\multicolumn{3}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01}\\
+\multicolumn{3}{l}{\rule{0pt}{1em}Dependent variable: ln(quantity in grams).}\\
+\multicolumn{3}{l}{\rule{0pt}{1em}All columns include state-by-month FE and demographic controls.}\\
+\multicolumn{3}{l}{\rule{0pt}{1em}Col 2 additionally includes municipality FE and restricts to municipalities with at least 2 observations.}\\
+\multicolumn{3}{l}{\rule{0pt}{1em}SEs clustered at state level.}\\
+\multicolumn{3}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01.}\\
+\end{tabular}
+}
+\end{table}

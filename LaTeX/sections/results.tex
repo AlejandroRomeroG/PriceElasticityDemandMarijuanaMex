@@ -1,0 +1,49 @@
+% ============================================================
+%  sections/results.tex  –  Results
+% ============================================================
+
+\subsection{Baseline OLS estimates}
+
+Table~\ref{tab:main-ols} reports the core log--log estimates linking transaction quantity to unit price.  The pooled specification implies an elasticity of $-0.551$, and the coefficient becomes slightly more negative as controls are added.  Once product quality and demographics are included, the estimate is $-0.633$.  We use the state-by-month fixed-effects specification in column~(6) as the main benchmark because it keeps the full analytic sample while absorbing state-specific monthly shocks, the richest time-varying market controls available in the main OLS block.  In that benchmark, the elasticity is $-0.652$.  The preceding state-only and state-plus-month specifications produce very similar elasticities of $-0.643$, so the estimate remains in a narrow band as the specification absorbs richer geographic and temporal heterogeneity.  This stability suggests that the baseline association is not driven solely by broad local or seasonal shocks.
+
+The magnitude is also consistent with the transaction-based cannabis literature.  It is close to the crowdsourced estimate of \citet{davis2016crowd} for the United States and falls comfortably within the range of geography-based estimates summarized in Section~\ref{sec:litreview}, including \citet{halcoussis2017geo}.  In substantive terms, the benchmark coefficient implies that a 10\% higher unit price is associated with roughly a 6.5\% smaller transaction quantity. 
+
+\input{tables/table1_main_ols}
+
+\subsection{Quality heterogeneity}
+
+Table~\ref{tab:quality-segmented} shows that the average elasticity masks substantial heterogeneity across product tiers.  When the sample is split by perceived quality, seedless marijuana has an estimated elasticity of $-0.613$, whereas seeded marijuana has an elasticity of $-0.891$.  The pooled interaction specification delivers the same message.  In that column, the coefficient on $\ln(\text{Price})$ is $-0.873$ for the reference category, and the interaction term of $0.259$ implies an elasticity of about $-0.614$ for good-quality transactions.  The close match between the split-sample and interaction estimates suggests that the quality gradient is not an artifact of changing samples.  All three columns retain the same state-by-month fixed effects and demographic controls as the benchmark, so the comparison isolates quality-tier heterogeneity rather than changes in the control set.
+
+One interpretation is that seeded marijuana functions as a less differentiated lower-tier product, for which consumers may have closer substitutes across sellers.  Seedless marijuana, by contrast, may attract buyers with stronger preferences for quality or fewer close substitutes within the same tier.  Although the descriptive statistics show a large price gap between quality tiers, the slope estimates still point to greater price responsiveness in the lower-quality segment.
+
+\input{tables/table2_quality_segmented}
+
+\subsection{Instrumental-variables diagnostics}
+
+Table~\ref{tab:iv-combined} summarizes the IV diagnostics using the OSM/OSRM driving-time matrices described in Section~\ref{sec:data}.  The production-hub driving-time instrument is reported alongside the Hausman-type leave-one-out mean price and the one-month-lag OSRM driving-time seizure-gravity index built from municipality-month enforcement data from \citet{mucd2019seizures}.  All columns include the benchmark state-by-month fixed effects and demographic controls.  The OSM production-hub IV is extremely imprecise, with an IV coefficient of $0.793$ and a standard error of $2.647$.  The Hausman IV yields $-0.648$, almost identical to the OLS benchmark, while the lagged seizure-gravity IV yields $-0.735$ with a standard error of $0.248$.  The Hausman column uses 3{,}173 observations because 120 transactions fall in singleton state--quality--month cells, for which a leave-one-out mean price cannot be computed.  Because purchases in the estimation sample run from January through September~2019, the one-month-lag seizure-gravity specification uses MUCD marijuana seizures from December~2018 through August~2019 and can be merged to all 3{,}293 transactions.
+
+\input{tables/table_combined_iv}
+
+Table~\ref{tab:iv-diagnostics} reports the corresponding first-stage and weak-instrument diagnostics, while repeating the IV coefficient from Table~\ref{tab:iv-combined} for readability.  Under the state-by-month fixed-effects designs, the first-stage F-statistic is only $0.60$ for the OSM production-hub instrument and $7.07$ for the lagged seizure-gravity instrument, both below conventional thresholds for reliable IV inference \citep{staiger1997instrumental,stock2005testing}.  The Hausman instrument is much stronger, with a first-stage F-statistic of $169.09$, consistent with common market-level price variation within state--quality--month cells.  Its IV estimate is also nearly identical to the OLS benchmark, and the Wu--Hausman p-value is $0.951$.  This high p-value does not by itself resolve the exclusion-restriction question: it is consistent both with limited price endogeneity and with an instrument that inherits the same bias as the regressor.  We therefore interpret the convergence between OLS and the Hausman IV as a robustness result: the similarity between both estimators suggests that endogeneity bias, if present, is limited in this sample.  The Anderson--Rubin confidence set is narrow for the Hausman IV but remains wide for the OSM and seizure-gravity specifications \citep{anderson1949estimation}.  For the weak geography-based instruments, inference should be read through the Anderson--Rubin confidence sets rather than conventional second-stage significance stars.
+
+\input{tables/table_iv_diagnostics}
+
+Taken together, the IV evidence supports the benchmark in different ways.  The Hausman specification is strong and delivers an elasticity almost identical to OLS, which is useful as a robustness check rather than as independent validation of exogeneity.  The geography-based OSM and seizure-gravity instruments are more directly supply motivated, yet their weak first stages and wide Anderson--Rubin intervals prevent using them as alternative benchmarks.
+
+\subsection{Robustness and sensitivity}
+
+The baseline elasticity remains negative and economically meaningful under several robustness checks.  Table~\ref{tab:robustness} first shows that trimming the 1st and 99th percentiles of price and quantity moves the benchmark estimate only from $-0.652$ to $-0.620$.  Excluding round-number quantities, a direct response to heaping documented in the raw quantity distribution, yields an elasticity of $-0.576$.  Both checks therefore reduce the magnitude slightly, but neither eliminates the central negative price--quantity gradient.
+
+\input{tables/table3_robustness}
+
+Table~\ref{tab:muni-fe} provides an additional spatial credibility check by adding municipality fixed effects to the state-by-month benchmark.  This comparison is not purely a change in fixed effects, since the municipality-fixed-effects specification drops municipalities with one observation and uses $3{,}127$ observations rather than $3{,}293$.  Even in that restricted sample, the elasticity changes only from $-0.652$ to $-0.664$.  The augmented specification therefore absorbs both state-month shocks and time-invariant municipality heterogeneity, yet the estimated elasticity changes by only about one hundredth.
+
+\input{tables/table_muni_fe}
+
+With only 32 state clusters, we also complement conventional clustered standard errors with a wild cluster bootstrap in the sense of \citet{cameron2008bootstrap} and \citet{roodman2019fast}.  Table~\ref{tab:bootstrap-inference} reports the conventional state-clustered interval, the wild cluster bootstrap interval using Webb weights and 9{,}999 replications, and a pairs cluster bootstrap sensitivity check.  The wild-bootstrap interval remains tightly centered around the benchmark elasticity and excludes zero by a wide margin, so the main inference does not appear to be an artifact of conventional clustered standard errors.
+
+\input{tables/table_bootstrap_inference}
+
+Finally, Table~\ref{tab:oster-bounds} reports the coefficient-stability exercise of \citet{oster2019unobservable}.  The calculation uses the short and long specifications from columns~(1) and~(6) of Table~\ref{tab:main-ols}, with $R_{\max}$ set to $1.3R^2_{\text{long}}$.  Because adding observables moves the elasticity away from zero, the raw $\delta^{*}$ needed to set the coefficient to zero is negative; the table reports its absolute value, $|\delta^{*}|=7.70$.  Thus, explaining away the benchmark would require unobserved selection that is large and works in the opposite direction from the observed controls.  This is not a proof of identification, but it makes an omitted-variable explanation of the benchmark elasticity less plausible.
+
+\input{tables/table_oster_bounds}
