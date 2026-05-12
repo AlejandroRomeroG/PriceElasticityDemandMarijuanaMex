@@ -1,0 +1,7 @@
+key,label,role,instrument,n,first_stage_F,estimate,se,wu_hausman_p,ar_ci_low,ar_ci_high
+ols,(1) OLS,Comparable OLS benchmark with state-by-month FE and demographics,NA,3293,NA,-0.6516259372486006,0.021705761544452196,NA,NA,NA
+osm,(2) OSM time,Geographic production-hub driving-time diagnostic,ln_travel_time_hub,3293,0.602070621114525,0.7930576530697625,2.6471962679774337,NA,-2.5,0.5
+hub_gravity,(3) Hub seizures,Lagged hub-only marijuana-seizure gravity,ln_Z_hub_seizure_lag1,3293,15.640519054445125,-0.6531413410529844,0.1590749995789267,0.9926423491913072,-1.08,-0.41000000000000014
+strict_gravity,(4) Strict upstream,Lagged outside-region upstream marijuana-seizure gravity,ln_Z_strict_upstream_lag1,3293,6.820861206874095,-0.6795820233313237,0.37333218950868063,NA,-2.5,0.5
+haus_state,(5) Hausman: other states,External Hausman price instrument; excludes own state,z_other_states_qm,3293,51.61371366103043,-0.7119705488563767,0.09261291412291947,0.5664160866776426,-0.8899999999999999,-0.48
+haus_region,(6) Hausman: other regions,External Hausman price instrument; excludes own macroregion,z_other_regions_qm,3293,21.734835758590318,-1.0251996127772758,0.29116243792169894,0.151561503957156,-1.81,-0.53

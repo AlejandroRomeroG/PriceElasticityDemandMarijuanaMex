@@ -10,7 +10,6 @@
 # Useful flags:
 #   RUN_BOOTSTRAP=0     skip bootstrap inference during quick checks
 #   COMPILE_PDF=0       regenerate tables without compiling the paper
-#   RUN_EXPLORATORY=1   also run exploratory scripts not used in the draft paper
 #   OSRM_ALLOW_NETWORK=1 allow OSRM queries if a cached matrix is missing
 ###############################################################################
 
@@ -43,7 +42,6 @@ flag <- function(name, default = TRUE) {
 
 run_bootstrap <- flag("RUN_BOOTSTRAP", TRUE)
 compile_pdf <- flag("COMPILE_PDF", TRUE)
-run_exploratory <- flag("RUN_EXPLORATORY", FALSE)
 
 timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
 log_dir <- file.path(root, "Logs", paste0("replication_", timestamp))
@@ -74,10 +72,6 @@ required_packages <- c(
   "modelsummary", "readr", "sf", "stringr",
   "tidyr"
 )
-
-if (run_exploratory) {
-  required_packages <- c(required_packages, "glmnet", "lmtest", "ranger", "sandwich")
-}
 
 check_packages(unique(required_packages))
 
@@ -145,6 +139,7 @@ paper_scripts <- c(
   "Code/RegressionAnalysis.R",
   "Code/IV_SeizureGravity.R",
   "Code/RegressionExtensions.R",
+  "Code/MainIVDiagnostics.R",
   "Code/FunctionalForms_Bounds.R",
   "Code/ExternalDataAppendix.R"
 )
@@ -159,18 +154,6 @@ if (run_bootstrap) {
 
 for (script in paper_scripts) {
   run_command(basename(script), rscript, script)
-}
-
-if (run_exploratory) {
-  exploratory_scripts <- c(
-    "Code/HeterogeneityAnalysis.R",
-    "Code/SpatialExtensions.R",
-    "Code/ML_CausalInference.R"
-  )
-
-  for (script in exploratory_scripts) {
-    run_command(paste("Exploratory", basename(script)), rscript, script)
-  }
 }
 
 if (compile_pdf) {

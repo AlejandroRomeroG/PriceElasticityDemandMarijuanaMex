@@ -30,6 +30,32 @@ LaTeX/*smoketest*
 table_label_test.*
 results_smoketest.*
 
+# Legacy paper tables superseded by the combined IV diagnostics
+LaTeX/tables/table4_iv.tex
+LaTeX/tables/table5_iv_seizure_gravity.tex
+LaTeX/tables/table6_iv_seizure_quality.tex
+
+# Local exploratory scripts and derived inputs not used by the manuscript workflow
+Code/Exploratory_*.R
+Code/BuildFuelPriceInputs.R
+Code/BuildHubWeatherInputs.R
+Code/BuildTopographyInputs.R
+Data/Derived/exploratory/
+Data/Derived/CMO-Historical-Data-Monthly.xlsx
+Data/Derived/cre_tarifas_finales_suministro_basico.csv
+Data/Derived/hub_state_weather_monthly.csv
+Data/Derived/mexico_electricity_tariff_indices_monthly.csv
+Data/Derived/mexico_fuel_prices_state_month.csv
+Data/Derived/mexico_municipality_topography_5km.csv
+Data/Derived/mexico_topography_points_5km_elevation.csv
+Data/Derived/pl_per_otr_feb26.csv
+Data/Derived/pl_per_vig_feb26.csv
+Data/Derived/worldbank_ag_commodity_prices_monthly.csv
+Data/Derived/worldbank_ag_input_prices_monthly.csv
+
+# Large raw public-data downloads used only to build compact derived inputs
+Data/Derived/historico_precios_expendio_*.csv
+
 # Local process notes
 HANDOFF.md
 QUALITY_ELASTICITY_ANALYSIS.md

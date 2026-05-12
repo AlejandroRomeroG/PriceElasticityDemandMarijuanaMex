@@ -4,20 +4,19 @@
 \label{tab:iv-diagnostics}
 \centering
 \resizebox{\linewidth}{!}{%
-\begin{tabular}[t]{lccc}
+\begin{tabular}[t]{lccccc}
 \toprule
-Diagnostic & OSM driving-time IV & Hausman IV & Seizure-gravity IV\\
+Diagnostic & (2) OSM time & (3) Hub seizures & (4) Strict upstream & (5) Hausman: other states & (6) Hausman: other regions\\
 \midrule
-First-stage F & 0.60 & 169.09 & 7.07\\
-IV estimate & 0.793 (2.647) & -0.648 (0.068) & -0.735 (0.248)\\
-Wu--Hausman p-value & 0.335 & 0.951 & 0.740\\
-Anderson--Rubin 95\% CI & [-2.50, 0.50] & [-0.79, -0.52] & [-2.50, 0.42]\\
+First-stage F & 0.60 & 15.64 & 6.82 & 51.61 & 21.73\\
+IV estimate & 0.793 (2.647) & -0.653 (0.159) & -0.680 (0.373) & -0.712 (0.093) & -1.025 (0.291)\\
+Wu--Hausman p-value & -- & 0.993 & -- & 0.566 & 0.152\\
+Anderson--Rubin 95\% CI & [-2.50, 0.50] & [-1.08, -0.41] & [-2.50, 0.50] & [-0.89, -0.48] & [-1.81, -0.53]\\
 \bottomrule
-\multicolumn{4}{l}{\rule{0pt}{1em}All diagnostics use the state-by-month FE specifications in Table~\ref{tab:iv-combined}.}\\
-\multicolumn{4}{l}{\rule{0pt}{1em}IV estimate entries reproduce the coefficient on ln(Price) [IV] and clustered SE from Table~\ref{tab:iv-combined}.}\\
-\multicolumn{4}{l}{\rule{0pt}{1em}Seizure-gravity diagnostics use one-month-lagged MUCD marijuana seizures from December 2018--August 2019.}\\
-\multicolumn{4}{l}{\rule{0pt}{1em}For weak geography-based IVs, inference should rely on Anderson-Rubin confidence sets rather than conventional significance stars.}\\
-\multicolumn{4}{l}{\rule{0pt}{1em}OSM and seizure-gravity have first-stage F-statistics below 10; Hausman has a strong first stage but relies on a leave-one-out exclusion restriction.}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}All diagnostics correspond to Table~\ref{tab:iv-combined}.}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}Wu--Hausman p-values are reported only for specifications with first-stage F $\geq$ 10.}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}The OSM column is retained to compare with distance-based instruments in prior cannabis studies.}\\
+\multicolumn{6}{l}{\rule{0pt}{1em}Hub-only seizure gravity is statistically stronger; the stricter outside-region seizure instrument reports the exclusion-strength tradeoff.}\\
 \end{tabular}
 }
 \end{table}

@@ -464,6 +464,8 @@ print(fitstat(iv_overid, "sargan"))
 # ============================================================================
 output_dir <- here("LaTeX", "tables")
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+write_legacy_iv_tables <- Sys.getenv("WRITE_LEGACY_IV_TABLES", "0") %in%
+  c("1", "true", "TRUE", "yes", "YES")
 
 # ---- Table 5: Main IV comparison ----
 tab5 <- list(
@@ -474,82 +476,88 @@ tab5 <- list(
   "(5) IV trimmed"       = iv_grav_trim
 )
 
-cat("\n\n========== TABLE 5: IV WITH SEIZURE GRAVITY ==========\n")
-msummary(tab5, output = "markdown",
-         stars = c('*' = .1, '**' = .05, '***' = .01),
-         coef_map = c("ln_price" = "ln(Price)",
-                      "fit_ln_price" = "ln(Price) [IV]",
-                      "quality_good" = "Good quality",
-                      "age" = "Age",
-                      gender_coef_map,
-                      educ_coef_map),
-         gof_map = c("nobs", "r.squared", "adj.r.squared"))
+if (write_legacy_iv_tables) {
+  cat("\n\n========== TABLE 5: IV WITH SEIZURE GRAVITY ==========\n")
+  msummary(tab5, output = "markdown",
+           stars = c('*' = .1, '**' = .05, '***' = .01),
+           coef_map = c("ln_price" = "ln(Price)",
+                        "fit_ln_price" = "ln(Price) [IV]",
+                        "quality_good" = "Good quality",
+                        "age" = "Age",
+                        gender_coef_map,
+                        educ_coef_map),
+           gof_map = c("nobs", "r.squared", "adj.r.squared"))
 
-msummary(tab5,
-         output = file.path(output_dir, "table5_iv_seizure_gravity.tex"),
-         stars = c('*' = .1, '**' = .05, '***' = .01),
-         coef_map = c("ln_price" = "ln(Price)",
-                      "fit_ln_price" = "ln(Price) [IV]",
-                      "quality_good" = "Good quality",
-                      "age" = "Age",
-                      gender_coef_map,
-                      educ_coef_map),
-         gof_map = c("nobs", "r.squared", "adj.r.squared"),
-         title = "IV estimates: seizure-gravity instrument",
-         notes = c(
-           "Dependent variable: ln(quantity in grams).",
-           "Instrument: ln(1 + Zm,t-1), where Zm,t-1 is the OSM driving-time-weighted sum of marijuana seizures in source municipalities in the prior month.",
-           "Seizure data: MUCD (datosabiertosdrogas.mucd.org.mx), compiled from official transparency-request responses.",
-           "The estimation sample uses one-month-lagged MUCD marijuana seizures from December 2018--August 2019.",
-           "All columns include state-by-month FE and demographics; SEs clustered at state level.",
-           "* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01."
-         ))
-insert_label_after_caption(
-  file.path(output_dir, "table5_iv_seizure_gravity.tex"),
-  "tab:iv-gravity"
-)
-force_table_here(file.path(output_dir, "table5_iv_seizure_gravity.tex"))
+  msummary(tab5,
+           output = file.path(output_dir, "table5_iv_seizure_gravity.tex"),
+           stars = c('*' = .1, '**' = .05, '***' = .01),
+           coef_map = c("ln_price" = "ln(Price)",
+                        "fit_ln_price" = "ln(Price) [IV]",
+                        "quality_good" = "Good quality",
+                        "age" = "Age",
+                        gender_coef_map,
+                        educ_coef_map),
+           gof_map = c("nobs", "r.squared", "adj.r.squared"),
+           title = "IV estimates: seizure-gravity instrument",
+           notes = c(
+             "Dependent variable: ln(quantity in grams).",
+             "Instrument: ln(1 + Zm,t-1), where Zm,t-1 is the OSM driving-time-weighted sum of marijuana seizures in source municipalities in the prior month.",
+             "Seizure data: MUCD (datosabiertosdrogas.mucd.org.mx), compiled from official transparency-request responses.",
+             "The estimation sample uses one-month-lagged MUCD marijuana seizures from December 2018--August 2019.",
+             "All columns include state-by-month FE and demographics; SEs clustered at state level."
+           ))
+  insert_label_after_caption(
+    file.path(output_dir, "table5_iv_seizure_gravity.tex"),
+    "tab:iv-gravity"
+  )
+  force_table_here(file.path(output_dir, "table5_iv_seizure_gravity.tex"))
 
-# ---- Table 6: Quality-segmented IV ----
-tab6 <- list(
-  "(2) IV full"    = iv_grav,
-  "(5) IV good"    = iv_grav_good,
-  "(6) IV bad"     = iv_grav_bad,
-  "(7) IV trimmed" = iv_grav_trim
-)
+  # ---- Table 6: Quality-segmented IV ----
+  tab6 <- list(
+    "(2) IV full"    = iv_grav,
+    "(5) IV good"    = iv_grav_good,
+    "(6) IV bad"     = iv_grav_bad,
+    "(7) IV trimmed" = iv_grav_trim
+  )
 
-cat("\n\n========== TABLE 6: IV BY QUALITY SEGMENT ==========\n")
-msummary(tab6, output = "markdown",
-         stars = c('*' = .1, '**' = .05, '***' = .01),
-         coef_map = c("fit_ln_price" = "ln(Price) [IV]",
-                      "quality_good" = "Good quality",
-                      "age" = "Age",
-                      gender_coef_map,
-                      educ_coef_map),
-         gof_map = c("nobs", "r.squared", "adj.r.squared"))
+  cat("\n\n========== TABLE 6: IV BY QUALITY SEGMENT ==========\n")
+  msummary(tab6, output = "markdown",
+           stars = c('*' = .1, '**' = .05, '***' = .01),
+           coef_map = c("fit_ln_price" = "ln(Price) [IV]",
+                        "quality_good" = "Good quality",
+                        "age" = "Age",
+                        gender_coef_map,
+                        educ_coef_map),
+           gof_map = c("nobs", "r.squared", "adj.r.squared"))
 
-msummary(tab6,
-         output = file.path(output_dir, "table6_iv_seizure_quality.tex"),
-         stars = c('*' = .1, '**' = .05, '***' = .01),
-         coef_map = c("fit_ln_price" = "ln(Price) [IV]",
-                      "quality_good" = "Good quality",
-                      "age" = "Age",
-                      gender_coef_map,
-                      educ_coef_map),
-         gof_map = c("nobs", "r.squared", "adj.r.squared"),
-         title = "IV estimates by quality segment (seizure-gravity instrument)",
-         notes = c(
-           "Dependent variable: ln(quantity in grams).",
-           "Instrument: ln(1 + Zm,t-1), the one-month-lag OSM driving-time-weighted seizure-gravity index based on marijuana seizures only.",
-           "The estimation sample uses one-month-lagged MUCD marijuana seizures from December 2018--August 2019.",
-           "All columns include state-by-month FE and demographics. SEs clustered at state level.",
-           "* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01."
-         ))
-insert_label_after_caption(
-  file.path(output_dir, "table6_iv_seizure_quality.tex"),
-  "tab:iv-gravity-quality"
-)
-force_table_here(file.path(output_dir, "table6_iv_seizure_quality.tex"))
+  msummary(tab6,
+           output = file.path(output_dir, "table6_iv_seizure_quality.tex"),
+           stars = c('*' = .1, '**' = .05, '***' = .01),
+           coef_map = c("fit_ln_price" = "ln(Price) [IV]",
+                        "quality_good" = "Good quality",
+                        "age" = "Age",
+                        gender_coef_map,
+                        educ_coef_map),
+           gof_map = c("nobs", "r.squared", "adj.r.squared"),
+           title = "IV estimates by quality segment (seizure-gravity instrument)",
+           notes = c(
+             "Dependent variable: ln(quantity in grams).",
+             "Instrument: ln(1 + Zm,t-1), the one-month-lag OSM driving-time-weighted seizure-gravity index based on marijuana seizures only.",
+             "The estimation sample uses one-month-lagged MUCD marijuana seizures from December 2018--August 2019.",
+             "All columns include state-by-month FE and demographics. SEs clustered at state level."
+           ))
+  insert_label_after_caption(
+    file.path(output_dir, "table6_iv_seizure_quality.tex"),
+    "tab:iv-gravity-quality"
+  )
+  force_table_here(file.path(output_dir, "table6_iv_seizure_quality.tex"))
+} else {
+  unlink(file.path(output_dir, c(
+    "table5_iv_seizure_gravity.tex",
+    "table6_iv_seizure_quality.tex"
+  )))
+  cat("\nLegacy seizure-gravity IV tables not written. Set WRITE_LEGACY_IV_TABLES=1 to regenerate them.\n")
+}
 
 cat("\n\nAll tables saved to:", output_dir, "\n")
 cat("Done.\n")

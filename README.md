@@ -8,7 +8,7 @@ The main manuscript is compiled from `LaTeX/PriceElasticityDemandMarijuanaMexico
 Rscript run_all.R
 ```
 
-The master script cleans the raw survey data, regenerates the descriptive and econometric tables, rebuilds appendix diagnostics, and compiles the manuscript PDF.
+The master script cleans the raw survey data, regenerates the descriptive and econometric tables, runs the main IV diagnostics, rebuilds appendix diagnostics, and compiles the manuscript PDF.
 
 ## Research Design
 
@@ -16,14 +16,15 @@ The paper uses an anonymous crowdsourced survey of marijuana purchases in Mexico
 
 The preferred specification is a log-log demand regression with product-quality controls, demographics, and state-by-month fixed effects. The benchmark coefficient is interpreted as a transaction-level elasticity: it describes how the quantity purchased in an observed transaction varies with the recorded unit price. It does not directly identify participation, purchase frequency, total individual consumption, or legal-market demand after regulation.
 
+Instrumental-variable results are reported as diagnostics rather than as a replacement benchmark. The main IV workflow compares OSM/OSRM driving time from production hubs, external Hausman-style prices from other states or macroregions within quality-month cells, and one-month-lag MUCD marijuana-seizure gravity instruments.
+
 ## Repository Structure
 
 ```text
 Code/      Cleaning, table generation, econometric scripts, and OSRM helpers
 Data/      Raw survey data, cleaned parquet, MUCD files, OSRM caches, INEGI layers
 LaTeX/     Manuscript source, bibliography, generated tables, and compiled PDF
-Literature/Reference PDFs used while drafting
-run_all.R  Master replication script
+run_all.R  Master replication script for the manuscript workflow
 ```
 
 ## Data Inputs
@@ -75,8 +76,7 @@ Useful flags:
 ```bash
 RUN_BOOTSTRAP=0 Rscript run_all.R
 COMPILE_PDF=0 Rscript run_all.R
-RUN_EXPLORATORY=1 Rscript run_all.R
 OSRM_ALLOW_NETWORK=1 Rscript run_all.R
 ```
 
-`RUN_EXPLORATORY=1` also runs exploratory scripts that are not part of the current paper tables. The default pipeline is the reproducible path for the first draft manuscript.
+The master script intentionally runs only the reproducible manuscript workflow. Exploratory scripts and intermediate experiments are excluded from the default pipeline and are not required to reproduce the draft.

@@ -433,8 +433,7 @@ msummary(tab1,
                       "FE: state_code", "FE: month_str", "FE: state_month"),
          title = "OLS estimates of the price elasticity of demand for marijuana",
          notes = c("Dependent variable: ln(quantity in grams).",
-                   "Robust SEs in parentheses (cols 1--3); clustered at state level (cols 4--6).",
-                   "* p < 0.1, ** p < 0.05, *** p < 0.01."))
+                   "Robust SEs in parentheses (cols 1--3); clustered at state level (cols 4--6)."))
 insert_label_after_caption(table1_path, "tab:main-ols")
 force_table_here(table1_path)
 wrap_tabular_in_resizebox(table1_path)
@@ -451,10 +450,10 @@ msummary(tab2,
                       gender_coef_map,
                       educ_coef_map),
          gof_map = c("nobs", "r.squared", "adj.r.squared"),
+         gof_omit = "FE:",
          title = "Quality-segmented demand estimates",
          notes = c("Dependent variable: ln(quantity in grams).",
-                   "All columns include state-by-month FE and demographics. SEs clustered at state level.",
-                   "* p < 0.1, ** p < 0.05, *** p < 0.01."))
+                   "All columns include state-by-month FE and demographics. SEs clustered at state level."))
 insert_label_after_caption(table2_path, "tab:quality-segmented")
 force_table_here(table2_path)
 
@@ -473,49 +472,54 @@ msummary(tab3,
 	         notes = c("Dependent variable: ln(quantity in grams).",
 	                   "All columns include state-by-month FE plus demographics. SEs clustered at state level.",
 	                   "Trimmed = drop 1st/99th percentile of price and quantity.",
-                   "No heap = exclude round-number quantities (multiples of 5 or near 28g).",
-                   "* p < 0.1, ** p < 0.05, *** p < 0.01."))
+                   "No heap = exclude round-number quantities (multiples of 5 or near 28g)."))
 insert_label_after_caption(table3_path, "tab:robustness")
 force_table_here(table3_path)
 
 table4_path <- file.path(output_dir, "table4_iv.tex")
-if (has_osm_iv) {
-  msummary(tab4,
-           output = table4_path,
-           stars = c('*' = .1, '**' = .05, '***' = .01),
-           coef_map = c("ln_price" = "ln(Price)",
-                        "fit_ln_price" = "ln(Price) [IV]",
-                        "quality_good" = "Good quality",
-                        "age" = "Age",
-                        gender_coef_map,
-                        educ_coef_map),
-           gof_map = c("nobs", "r.squared", "adj.r.squared"),
-           title = "Instrumental-variables estimates (OSM driving time to production hubs)",
-           notes = c("Dependent variable: ln(quantity in grams).",
-                     "Instrument: ln(OSM source-to-market driving time in minutes from nearest",
-                     "constructed production-hub point to purchase municipality: Sinaloa, Chihuahua, Guerrero, Durango, Michoacan).",
-                     "All columns include state-by-month FE and demographics. SEs clustered at state level.",
-                     "For weak IV specifications, inference should rely on weak-instrument diagnostics rather than conventional significance stars.",
-                     "* p < 0.1, ** p < 0.05, *** p < 0.01."))
-  insert_label_after_caption(table4_path, "tab:iv-distance")
-  force_table_here(table4_path)
-} else {
-  writeLines(
-    c(
-      "\\begin{table}[H]",
-      "\\centering",
-      "\\caption{Instrumental-variables estimates (OSM driving time to production hubs)}",
-      "\\label{tab:iv-distance}",
-      "\\centering",
-      "\\begin{tabular}[t]{p{0.86\\linewidth}}",
-      "\\toprule",
-      "The OSM production-hub driving-time IV is omitted in this run because the updated full-state-centroid hub construction requires a regenerated state-hub OSRM cache.\\\\",
-      "\\bottomrule",
-      "\\end{tabular}",
-      "\\end{table}"
-    ),
-    table4_path
-  )
+write_legacy_iv_tables <- Sys.getenv("WRITE_LEGACY_IV_TABLES", "0") %in%
+  c("1", "true", "TRUE", "yes", "YES")
+
+if (write_legacy_iv_tables) {
+  if (has_osm_iv) {
+    msummary(tab4,
+             output = table4_path,
+             stars = c('*' = .1, '**' = .05, '***' = .01),
+             coef_map = c("ln_price" = "ln(Price)",
+                          "fit_ln_price" = "ln(Price) [IV]",
+                          "quality_good" = "Good quality",
+                          "age" = "Age",
+                          gender_coef_map,
+                          educ_coef_map),
+             gof_map = c("nobs", "r.squared", "adj.r.squared"),
+             title = "Instrumental-variables estimates (OSM driving time to production hubs)",
+             notes = c("Dependent variable: ln(quantity in grams).",
+                       "Instrument: ln(OSM source-to-market driving time in minutes from nearest",
+                       "constructed production-hub point to purchase municipality: Sinaloa, Chihuahua, Guerrero, Durango, Michoacan).",
+                       "All columns include state-by-month FE and demographics. SEs clustered at state level.",
+                       "For weak IV specifications, inference should rely on weak-instrument diagnostics rather than conventional significance stars."))
+    insert_label_after_caption(table4_path, "tab:iv-distance")
+    force_table_here(table4_path)
+  } else {
+    writeLines(
+      c(
+        "\\begin{table}[H]",
+        "\\centering",
+        "\\caption{Instrumental-variables estimates (OSM driving time to production hubs)}",
+        "\\label{tab:iv-distance}",
+        "\\centering",
+        "\\begin{tabular}[t]{p{0.86\\linewidth}}",
+        "\\toprule",
+        "The OSM production-hub driving-time IV is omitted in this run because the updated full-state-centroid hub construction requires a regenerated state-hub OSRM cache.\\\\",
+        "\\bottomrule",
+        "\\end{tabular}",
+        "\\end{table}"
+      ),
+      table4_path
+    )
+  }
+} else if (file.exists(table4_path)) {
+  unlink(table4_path)
 }
 
 cat("\n\nAll tables saved to:", output_dir, "\n")

@@ -7,12 +7,12 @@
 #
 #  Extensions implemented:
 #    A. Municipality fixed effects (finer geography)
-#    B. Hausman-type leave-one-out mean price instrument
+#    B. Legacy internal Hausman diagnostic (not the manuscript IV table)
 #    C. Reduced-form estimates (regress quantity directly on instruments)
 #    D. Wu-Hausman endogeneity test (OLS vs IV)
 #    E. Anderson-Rubin weak-IV robust inference
 #    F. Nonlinear price effects (quadratic in ln_price)
-#    G. Combined IV table: OSM driving-time + seizure-gravity side by side
+#    G. Main IV tables delegated to MainIVDiagnostics.R
 #
 #  All standard errors clustered at state level unless noted.
 ###############################################################################
@@ -594,173 +594,15 @@ cat("    Implied elasticity at median ln_price (",
     round(coef(mG_quad)["ln_price"] + 2 * coef(mG_quad)["ln_price_sq"] *
             median(df$ln_price), 4), "\n")
 
-# ============================================================================
-# G. COMBINED IV SUMMARY TABLE
-# ============================================================================
-cat("\n\n========= G. COMBINED IV SUMMARY TABLE =========\n")
-
-# OLS baseline
-mH_ols <- feols(ln_quantity ~ ln_price + quality_good + age + gender_f + educ_f
-                | state_month,
-                data = df, cluster = ~state_code)
-
-# Hausman IV
-mH_iv_haus <- feols(ln_quantity ~ quality_good + age + gender_f + educ_f
-                    | state_month
-                    | ln_price ~ loo_mean_lnp,
-                    data = df_hausman, cluster = ~state_code)
-
-tab_combined <- list(
-  "(1) OLS"         = mH_ols
-)
-
-if (has_osm_iv) {
-  mH_iv_dist <- feols(ln_quantity ~ quality_good + age + gender_f + educ_f
-                      | state_month
-                      | ln_price ~ ln_travel_time_hub,
-                      data = df, cluster = ~state_code)
-  tab_combined[["(2) IV: OSM driving time"]] <- mH_iv_dist
-} else {
-  mH_iv_dist <- NULL
-}
-
-tab_combined[[paste0("(", length(tab_combined) + 1L, ") IV: Hausman")]] <- mH_iv_haus
-
-# Add seizure-gravity if available
-if (has_mucd) {
-  mH_iv_grav <- feols(ln_quantity ~ quality_good + age + gender_f + educ_f
-                      | state_month
-                      | ln_price ~ ln_Z_gravity_lag1,
-                      data = df, cluster = ~state_code)
-  tab_combined[[paste0("(", length(tab_combined) + 1L, ") IV: gravity")]] <- mH_iv_grav
-}
-
-msummary(tab_combined, output = "markdown",
-         stars = c('*' = .1, '**' = .05, '***' = .01),
-         coef_map = c("ln_price" = "ln(Price)",
-                      "fit_ln_price" = "ln(Price) [IV]",
-                      "quality_good" = "Good quality",
-                      "age" = "Age",
-                      gender_coef_map,
-                      educ_coef_map),
-         gof_map = c("nobs", "r.squared", "adj.r.squared"))
-
-# ---- Export combined table to LaTeX ----
 output_dir <- here("LaTeX", "tables")
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
-combined_notes <- c(
-  "Dependent variable: ln(quantity in grams).",
-  "All columns include state-by-month FE and demographic controls.",
-  if (has_osm_iv) {
-    "OSM driving-time IV: instrument = ln(OSM driving time from nearest constructed production-hub point)."
-  } else {
-    "OSM hub driving-time IV omitted; regenerated state-centroid OSRM cache required."
-  },
-  "Hausman IV: instrument = leave-one-out mean ln(price) within state-quality-month cell.",
-  "Gravity IV: instrument = ln(1 + one-month-lag seizure-gravity index).",
-  "For weak geography-based IVs, inference should rely on Anderson-Rubin confidence sets rather than conventional significance stars.",
-  "SEs clustered at state level.",
-  "* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01."
-)
-
-msummary(tab_combined,
-         output = file.path(output_dir, "table_combined_iv.tex"),
-         stars = c('*' = .1, '**' = .05, '***' = .01),
-         coef_map = c("ln_price" = "ln(Price)",
-                      "fit_ln_price" = "ln(Price) [IV]",
-                      "quality_good" = "Good quality",
-                      "age" = "Age",
-                      gender_coef_map,
-                      educ_coef_map),
-         gof_map = c("nobs", "r.squared", "adj.r.squared"),
-         title = "OLS and IV estimates: alternative identification strategies",
-         notes = combined_notes)
-insert_label_after_caption(
-  file.path(output_dir, "table_combined_iv.tex"),
-  "tab:iv-combined"
-)
-force_table_here(file.path(output_dir, "table_combined_iv.tex"))
-wrap_tabular_in_resizebox(file.path(output_dir, "table_combined_iv.tex"))
-
-# ---- Export IV diagnostic table ----
-extract_ivf <- function(model) {
-  txt <- paste(capture.output(fitstat(model, "ivf")), collapse = " ")
-  stat <- sub(".*stat = ([^,]+),.*", "\\1", txt)
-  as.numeric(stat)
-}
-
-fmt_num <- function(x, digits = 3) {
-  if (is.na(x) || !is.finite(x)) return("--")
-  formatC(x, format = "f", digits = digits)
-}
-
-fmt_p <- function(x) {
-  if (is.na(x) || !is.finite(x)) return("--")
-  formatC(x, format = "f", digits = 3)
-}
-
-fmt_coef_se <- function(coef_value, se_value) {
-  paste0(fmt_num(coef_value), " (", fmt_num(se_value), ")")
-}
-
-fmt_iv_coef_se <- function(model) {
-  nm <- intersect(c("fit_ln_price", "ln_price"), names(coef(model)))[1]
-  if (is.na(nm)) return("--")
-  fmt_coef_se(coef(model)[nm], se(model)[nm])
-}
-
-fmt_ci <- function(ci) {
-  if (length(ci) != 2 || any(!is.finite(ci))) return("--")
-  paste0("[", fmt_num(ci[1], 2), ", ", fmt_num(ci[2], 2), "]")
-}
-
-wu_p_dist <- if (has_osm_iv) {
-  2 * pt(-abs(coef(mD_wu)["resid_fs_dist"] /
-                se(mD_wu)["resid_fs_dist"]),
-         df = mD_wu$nobs - length(coef(mD_wu)))
-} else {
-  NA_real_
-}
-
-iv_diag_path <- file.path(output_dir, "table_iv_diagnostics.tex")
-writeLines(
-  c(
-    "\\begin{table}[H]",
-    "\\centering",
-    "\\caption{Instrumental-variables estimates and diagnostics}",
-    "\\label{tab:iv-diagnostics}",
-    "\\centering",
-    "\\resizebox{\\linewidth}{!}{%",
-    "\\begin{tabular}[t]{lccc}",
-    "\\toprule",
-    "Diagnostic & OSM driving-time IV & Hausman IV & Seizure-gravity IV\\\\",
-    "\\midrule",
-    paste0("First-stage F & ", if (has_osm_iv) fmt_num(extract_ivf(mH_iv_dist), 2) else "--", " & ",
-           fmt_num(extract_ivf(mH_iv_haus), 2), " & ",
-           if (has_mucd) fmt_num(extract_ivf(mH_iv_grav), 2) else "--", "\\\\"),
-    paste0("IV estimate & ",
-           if (has_osm_iv) fmt_iv_coef_se(mH_iv_dist) else "--", " & ",
-           fmt_iv_coef_se(mH_iv_haus), " & ",
-           if (has_mucd) fmt_iv_coef_se(mH_iv_grav) else "--", "\\\\"),
-    paste0("Wu--Hausman p-value & ", fmt_p(wu_p_dist), " & ",
-           fmt_p(wu_p_haus), " & ",
-           if (has_mucd) fmt_p(wu_p_grav) else "--", "\\\\"),
-    paste0("Anderson--Rubin 95\\% CI & ", fmt_ci(ar_ci_dist), " & ",
-           fmt_ci(ar_ci_haus), " & ",
-           if (has_mucd) fmt_ci(ar_ci_grav) else "--", "\\\\"),
-    "\\bottomrule",
-    "\\multicolumn{4}{l}{\\rule{0pt}{1em}All diagnostics use the state-by-month FE specifications in Table~\\ref{tab:iv-combined}.}\\\\",
-    "\\multicolumn{4}{l}{\\rule{0pt}{1em}IV estimate entries reproduce the coefficient on ln(Price) [IV] and clustered SE from Table~\\ref{tab:iv-combined}.}\\\\",
-    "\\multicolumn{4}{l}{\\rule{0pt}{1em}Seizure-gravity diagnostics use one-month-lagged MUCD marijuana seizures from December 2018--August 2019.}\\\\",
-    "\\multicolumn{4}{l}{\\rule{0pt}{1em}For weak geography-based IVs, inference should rely on Anderson-Rubin confidence sets rather than conventional significance stars.}\\\\",
-    "\\multicolumn{4}{l}{\\rule{0pt}{1em}OSM and seizure-gravity have first-stage F-statistics below 10; Hausman has a strong first stage but relies on a leave-one-out exclusion restriction.}\\\\",
-    "\\end{tabular}",
-    "}",
-    "\\end{table}"
-  ),
-  iv_diag_path
-)
+# ============================================================================
+# G. IV SUMMARY TABLES
+# ============================================================================
+cat("\n\n========= G. IV SUMMARY TABLES =========\n")
+cat("Main IV tables are generated by Code/MainIVDiagnostics.R.\n")
+cat("RegressionExtensions.R keeps only auxiliary diagnostics and robustness tables.\n")
 
 # ---- Export municipality FE table ----
 tab_muni_fe <- list(
@@ -782,8 +624,7 @@ msummary(tab_muni_fe,
            "Dependent variable: ln(quantity in grams).",
            "All columns include state-by-month FE and demographic controls.",
            "Col 2 additionally includes municipality FE and restricts to municipalities with at least 2 observations.",
-           "SEs clustered at state level.",
-           "* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01."
+           "SEs clustered at state level."
          ))
 insert_label_after_caption(
   file.path(output_dir, "table_muni_fe.tex"),

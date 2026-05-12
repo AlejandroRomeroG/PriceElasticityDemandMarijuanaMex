@@ -77,15 +77,15 @@ print(stats::confint(wild_boot))
 cat("\n")
 
 # ============================================================
-# 2. PAIRS CLUSTER BOOTSTRAP (secondary sensitivity, 1000 reps)
+# 2. PAIRS CLUSTER BOOTSTRAP (secondary sensitivity, 9999 reps)
 # ============================================================
 cat("------------------------------------------------------\n")
-cat("2. PAIRS CLUSTER BOOTSTRAP (secondary sensitivity, 1000 replications)\n")
+cat("2. PAIRS CLUSTER BOOTSTRAP (secondary sensitivity, 9999 replications)\n")
 cat("------------------------------------------------------\n")
 
 states <- unique(df$state_fe)
 n_states <- length(states)
-B <- 1000
+B <- 9999
 boot_betas <- numeric(B)
 
 for (b in seq_len(B)) {
@@ -150,7 +150,7 @@ writeLines(
     "\\bottomrule",
     "\\multicolumn{4}{l}{\\rule{0pt}{1em}Benchmark model: state-by-month FE, quality, age, gender, and education controls.}\\\\",
     "\\multicolumn{4}{l}{\\rule{0pt}{1em}Wild bootstrap uses Webb weights, 9,999 replications, and state clusters.}\\\\",
-    "\\multicolumn{4}{l}{\\rule{0pt}{1em}Pairs cluster bootstrap resamples states with replacement across 1,000 replications.}\\\\",
+    "\\multicolumn{4}{l}{\\rule{0pt}{1em}Pairs cluster bootstrap resamples states with replacement across 9,999 replications.}\\\\",
     "\\end{tabular}",
     "\\end{table}"
   ),

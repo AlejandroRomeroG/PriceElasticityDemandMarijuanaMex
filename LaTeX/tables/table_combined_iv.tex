@@ -4,44 +4,45 @@
 \label{tab:iv-combined}
 \centering
 \resizebox{\linewidth}{!}{%
-\begin{tabular}[t]{lcccc}
+\begin{tabular}[t]{lcccccc}
 \toprule
-  & (1) OLS & (2) IV: OSM driving time & (3) IV: Hausman & (4) IV: gravity\\
+  & (1) OLS & (2) OSM time & (3) Hub seizures & (4) Strict upstream & (5) Hausman: other states & (6) Hausman: other regions\\
 \midrule
-ln(Price) & -0.652*** &  &  & \\
- & (0.022) &  &  & \\
-ln(Price) [IV] &  & 0.793 & -0.648*** & -0.735***\\
- &  & (2.647) & (0.068) & (0.248)\\
-Good quality & 0.603*** & -0.688 & 0.590*** & 0.677**\\
- & (0.059) & (2.363) & (0.069) & (0.250)\\
-Age & 0.022*** & 0.025*** & 0.022*** & 0.022***\\
- & (0.005) & (0.009) & (0.005) & (0.005)\\
-Gender: Other & 0.165 & 0.235 & 0.213 & 0.161\\
- & (0.163) & (0.345) & (0.178) & (0.165)\\
-Gender: Women & 0.034 & 0.024 & 0.029 & 0.035\\
- & (0.059) & (0.135) & (0.059) & (0.057)\\
-Education: Middle school & 0.010 & 0.485 & -0.013 & -0.018\\
- & (0.206) & (0.942) & (0.207) & (0.214)\\
-Education: High school & 0.070 & 0.358 & 0.064 & 0.053\\
- & (0.180) & (0.587) & (0.180) & (0.177)\\
-Education: Bachelor & 0.348* & 0.372 & 0.354* & 0.347*\\
- & (0.184) & (0.291) & (0.183) & (0.180)\\
-Education: Graduate & 0.415* & 0.195 & 0.429** & 0.427*\\
- & (0.209) & (0.562) & (0.208) & (0.219)\\
+ln(Price) & -0.652*** &  &  &  &  & \\
+ & (0.022) &  &  &  &  & \\
+ln(Price) [IV] &  & 0.793 & -0.653*** & -0.680* & -0.712*** & -1.025***\\
+ &  & (2.647) & (0.159) & (0.373) & (0.093) & (0.291)\\
+Good quality & 0.603*** & -0.688 & 0.604*** & 0.628* &  & \\
+ & (0.059) & (2.363) & (0.172) & (0.310) &  & \\
+Age & 0.022*** & 0.025*** & 0.022*** & 0.022*** & 0.022*** & 0.022***\\
+ & (0.005) & (0.009) & (0.005) & (0.004) & (0.005) & (0.005)\\
+Gender: Other & 0.165 & 0.235 & 0.165 & 0.164 & 0.144 & 0.130\\
+ & (0.163) & (0.345) & (0.163) & (0.167) & (0.162) & (0.153)\\
+Gender: Women & 0.034 & 0.024 & 0.034 & 0.034 & 0.029 & 0.032\\
+ & (0.059) & (0.135) & (0.060) & (0.057) & (0.057) & (0.052)\\
+Education: Middle school & 0.010 & 0.485 & 0.009 & 0.001 & -0.002 & -0.111\\
+ & (0.206) & (0.942) & (0.216) & (0.220) & (0.210) & (0.168)\\
+Education: High school & 0.070 & 0.358 & 0.069 & 0.064 & 0.063 & -0.005\\
+ & (0.180) & (0.587) & (0.188) & (0.165) & (0.184) & (0.185)\\
+Education: Bachelor & 0.348* & 0.372 & 0.348* & 0.347* & 0.353* & 0.341*\\
+ & (0.184) & (0.291) & (0.184) & (0.181) & (0.186) & (0.181)\\
+Education: Graduate & 0.415* & 0.195 & 0.415* & 0.419* & 0.433** & 0.475**\\
+ & (0.209) & (0.562) & (0.206) & (0.235) & (0.210) & (0.202)\\
 \midrule
-Num.Obs. & 3293 & 3293 & 3173 & 3293\\
-R2 & 0.448 & 0.136 & 0.133 & 0.137\\
-R2 Adj. & 0.401 & 0.063 & 0.075 & 0.064\\
+Num.Obs. & 3293 & 3293 & 3293 & 3293 & 3293 & 3293\\
+R2 & 0.448 & 0.136 & 0.137 & 0.136 & 0.143 & 0.142\\
+R2 Adj. & 0.401 & 0.063 & 0.065 & 0.064 & 0.066 & 0.065\\
 \bottomrule
-\multicolumn{5}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}Dependent variable: ln(quantity in grams).}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}All columns include state-by-month FE and demographic controls.}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}OSM driving-time IV: instrument = ln(OSM driving time from nearest constructed production-hub point).}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}Hausman IV: instrument = leave-one-out mean ln(price) within state-quality-month cell.}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}Gravity IV: instrument = ln(1 + one-month-lag seizure-gravity index).}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}For weak geography-based IVs, inference should rely on Anderson-Rubin confidence sets rather than conventional significance stars.}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}SEs clustered at state level.}\\
-\multicolumn{5}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01.}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}* p $<$ 0.1, ** p $<$ 0.05, *** p $<$ 0.01}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}Dependent variable: ln(quantity in grams).}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}All columns include state-by-month fixed effects and demographic controls.}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}OSM time: instrument = ln(OSM/OSRM source-to-market driving time from nearest production-hub state centroid).}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}Hub seizures: instrument = ln(1 + one-month-lag hub-only marijuana-seizure gravity index).}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}Strict upstream: instrument = ln(1 + one-month-lag outside-region marijuana-seizure gravity index).}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}Hausman instruments use other-market mean ln(price) within the same quality-by-month cell, excluding the buyer's own state or macroregion.}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}The external Hausman columns also include quality-by-month fixed effects, so the standalone quality indicator is absorbed.}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}For weak IV columns, rely on Anderson--Rubin diagnostics rather than conventional stars.}\\
+\multicolumn{7}{l}{\rule{0pt}{1em}SEs clustered at state level.}\\
 \end{tabular}
 }
 \end{table}
